@@ -1,0 +1,13 @@
+.Button  button{
+    text-align: center;
+    background-color: #1A237E;
+    color: #ffffff;
+    padding: 12px 10px;
+    width: 100px;
+    box-sizing: border-box;
+    outline: none;
+    border:none;
+    border-left: 1px solid #ffffff;
+    margin-top: 20px;
+    display: inline-block;
+}

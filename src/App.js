@@ -1,26 +1,58 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Header from './components/Header/Header';
+import Button from './components/Button/Button';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      languages: [
+        { name: "Php", votes: 0 },
+        { name: "Python", votes: 0 },
+        { name: "Go", votes: 0 },
+        { name: "Java", votes: 0 }
+      ]
+    }
+  }
+
+  voteHandler(i) {
+    let newLanguages = [...this.state.languages];
+    newLanguages[i].votes++;
+    function swap(array, i, j) {
+      var temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+    this.setState({ languages: newLanguages });
+
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <div className="row">
+          <Header></Header>
+        </div>
+        <div className="row">
+          {
+            this.state.languages.map((lang, i) =>
+              <div key={i} className="language">
+                <div className="voteCount">
+                  {lang.votes}
+                </div>
+                <div className="languageName">
+                  {lang.name}
+                </div>
+                <Button voteBtn={this.voteHandler.bind(this, i)}>Vote</Button>
+              </div>
+            )
+          }
+        </div>
+      </div>
+    );
+  }
+
 }
 
 export default App;
