@@ -5,7 +5,7 @@ import Button from './components/Button/Button';
 import TopVote from './components/Header/TopVote';
 import axios from 'axios';
 
-const baseURL = 'https://voting-app-31eb5.firebaseio.com';
+const baseURL = 'https:firebaseio.com';
 let maxVotes;
 class App extends React.Component {
   constructor(props) {
