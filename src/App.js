@@ -3,40 +3,73 @@ import './App.css';
 import Header from './components/Header/Header';
 import Button from './components/Button/Button';
 import TopVote from './components/Header/TopVote';
+import axios from 'axios';
 
+const baseURL = 'https://voting-app-31eb5.firebaseio.com';
+let maxVotes;
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       languages: [
-        { name: "Php", votes: 0 },
-        { name: "Python", votes: 0 },
-        { name: "Go", votes: 0 },
-        { name: "Java", votes: 0 }
+        {
+          name: "Php",
+          votes: 0
+        },
+        {
+          name: "Python",
+          votes: 0
+        },
+        {
+          name: "Go",
+          votes: 0
+        },
+        {
+          name: "Java",
+          votes: 0
+        }
       ],
-      highestVote: 0
+      highestVote: 0,
+      loading: false
     }
   }
 
   voteHandler(i) {
     let newLanguages = [...this.state.languages];
     newLanguages[i].votes++;
-    function swap(array, i, j) {
-      var temp = array[i];
-      array[i] = array[j];
-      array[j] = temp;
-    }
+    // function swap(array, i, j) {
+    //   var temp = array[i];
+    //   array[i] = array[j];
+    //   array[j] = temp;
+    // }
     this.setState({
-      languages: newLanguages
+      languages: newLanguages,
+      highestVote: this.maxVotes
     });
     //API call to save to firebase
-
-
-
+    const votesCount = {
+      languagesVote: this.state.languages,
+      highestVote: maxVotes + 1
+    };
+    axios.put(baseURL + '/votes.json', votesCount).then((response) => {
+    }).catch(err => console.log(err));
     //Calling the higest vote func
     this.highestVote();
-    console.log(this.state.languages);
   }
+  // componentDidMount() {
+  //   setTimeout(() => {
+  //     axios.get(baseURL + '/votes.json')
+  //       .then(response => {
+  //         console.log(response);
+  //         this.setState({
+  //           languages: response.data,
+  //           highestVote: response.highestVote
+  //         });
+  //       }).catch(err => {
+  //         console.log(err);
+  //       });
+  //   }, 300);
+  // }
 
   highestVote = () => {
     const arrLang = [...this.state.languages];
@@ -52,12 +85,12 @@ class App extends React.Component {
     const java = arrLang[3].name;
     const javaVotes = arrLang[3].votes;
 
-    const maxVotes = Math.max(phpVotes, pythonVotes, goVotes, javaVotes);
+    maxVotes = Math.max(phpVotes, pythonVotes, goVotes, javaVotes);
     this.setState({
-      highestVote: maxVotes
+      highestVote: maxVotes,
     });
 
-    console.log(maxVotes);
+    // console.log(maxVotes);
     // console.log("pphp" + php, phpVotes);
     // console.log("python" + python, pythonVotes);
     // console.log("go" + go, goVotes);
@@ -67,24 +100,26 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <TopVote className="topVote">{this.state.highestVote}</TopVote>
-        <div className="row">
-          <Header />
-        </div>
-        <div className="row">
-          {
-            this.state.languages.map((lang, i) =>
-              <div key={i} className="language">
-                <div className="voteCount">
-                  {lang.votes}
+        <div>
+          <TopVote className="topVote">{this.state.highestVote}</TopVote>
+          <div className="row">
+            <Header />
+          </div>
+          <div className="row">
+            {
+              this.state.languages.map((lang, i) =>
+                <div key={i} className="language">
+                  <div className="voteCount">
+                    {lang.votes}
+                  </div>
+                  <div className="languageName">
+                    {lang.name}
+                  </div>
+                  <Button voteBtn={this.voteHandler.bind(this, i)}>Vote</Button>
                 </div>
-                <div className="languageName">
-                  {lang.name}
-                </div>
-                <Button voteBtn={this.voteHandler.bind(this, i)}>Vote</Button>
-              </div>
-            )
-          }
+              )
+            }
+          </div>
         </div>
       </div>
     );
