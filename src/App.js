@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import Header from './components/Header/Header';
 import Button from './components/Button/Button';
+import TopVote from './components/Header/TopVote';
 
 class App extends React.Component {
   constructor(props) {
@@ -12,7 +13,8 @@ class App extends React.Component {
         { name: "Python", votes: 0 },
         { name: "Go", votes: 0 },
         { name: "Java", votes: 0 }
-      ]
+      ],
+      highestVote: 0
     }
   }
 
@@ -24,15 +26,50 @@ class App extends React.Component {
       array[i] = array[j];
       array[j] = temp;
     }
-    this.setState({ languages: newLanguages });
+    this.setState({
+      languages: newLanguages
+    });
+    //API call to save to firebase
 
+
+
+    //Calling the higest vote func
+    this.highestVote();
+    console.log(this.state.languages);
+  }
+
+  highestVote = () => {
+    const arrLang = [...this.state.languages];
+    const php = arrLang[0].name;
+    const phpVotes = arrLang[0].votes;
+
+    const python = arrLang[1].name;
+    const pythonVotes = arrLang[1].votes;
+
+    const go = arrLang[2].name;
+    const goVotes = arrLang[2].votes;
+
+    const java = arrLang[3].name;
+    const javaVotes = arrLang[3].votes;
+
+    const maxVotes = Math.max(phpVotes, pythonVotes, goVotes, javaVotes);
+    this.setState({
+      highestVote: maxVotes
+    });
+
+    console.log(maxVotes);
+    // console.log("pphp" + php, phpVotes);
+    // console.log("python" + python, pythonVotes);
+    // console.log("go" + go, goVotes);
+    // console.log("java" + java, javaVotes);
   }
 
   render() {
     return (
       <div className="App">
+        <TopVote className="topVote">{this.state.highestVote}</TopVote>
         <div className="row">
-          <Header></Header>
+          <Header />
         </div>
         <div className="row">
           {
